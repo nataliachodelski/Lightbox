@@ -69,6 +69,8 @@ final class PreviewController: ObservableObject {
             errorMessage = message
         case .zoomChanged(let percent):
             zoomPercent = percent
+        case .referenceMoved:
+            break
         }
     }
 

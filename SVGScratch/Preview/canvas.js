@@ -13,6 +13,16 @@
   let panY = 0;
   let hasRenderedOnce = false;
 
+  let refX = 0;
+  let refY = 0;
+  let refScale = 1;
+  let refRotation = 0;
+  let refImageWidth = 0;
+  let refImageHeight = 0;
+  let refHasImage = false;
+  let refLocked = false;
+  let refSelected = false;
+
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
   }
@@ -97,24 +107,61 @@
       zoomToFit();
     }
 
+    applyReferenceTransform();
+
     post({ type: 'rendered', width: size.width, height: size.height });
   };
+
+  function applyReferenceTransform() {
+    if (!refHasImage) return;
+
+    const svgEl = host.querySelector('svg');
+    const canvasSize = svgEl ? getIntrinsicSize(svgEl) : { width: 0, height: 0 };
+    const imageLongest = Math.max(refImageWidth, refImageHeight) || 1;
+    const canvasLongest = Math.max(canvasSize.width, canvasSize.height);
+    const fitScale = canvasLongest > 0 ? canvasLongest / imageLongest : 1;
+    const effectiveScale = fitScale * refScale;
+
+    const centerX = canvasSize.width / 2 + refX;
+    const centerY = canvasSize.height / 2 + refY;
+
+    ref.style.left = (centerX - refImageWidth / 2) + 'px';
+    ref.style.top = (centerY - refImageHeight / 2) + 'px';
+    ref.style.transform = 'scale(' + effectiveScale + ') rotate(' + refRotation + 'deg)';
+  }
+
+  function deselectReference() {
+    refSelected = false;
+    ref.classList.remove('ref-selected');
+  }
 
   window.setReference = function (config) {
     if (!config || !config.dataURI || !config.visible) {
       ref.style.display = 'none';
       ref.removeAttribute('src');
+      ref.classList.remove('ref-interactive');
+      refHasImage = false;
+      if (!config) deselectReference();
       return;
     }
 
+    refX = config.x || 0;
+    refY = config.y || 0;
+    refScale = config.scale || 1;
+    refRotation = config.rotation || 0;
+    refImageWidth = config.imageWidth || 0;
+    refImageHeight = config.imageHeight || 0;
+    refLocked = !!config.locked;
+    refHasImage = true;
+
     ref.src = config.dataURI;
     ref.style.opacity = config.opacity != null ? config.opacity : 0.5;
-    ref.style.left = (config.x || 0) + 'px';
-    ref.style.top = (config.y || 0) + 'px';
-    ref.style.transform = 'scale(' + (config.scale || 1) + ') rotate(' + (config.rotation || 0) + 'deg)';
     ref.style.display = 'block';
     host.style.zIndex = config.onTop ? '1' : '0';
     ref.style.zIndex = config.onTop ? '2' : '0';
+    ref.classList.toggle('ref-interactive', !refLocked);
+    if (refLocked) deselectReference();
+    applyReferenceTransform();
   };
 
   window.zoomIn = function () {
@@ -215,6 +262,68 @@
     if (isDragging) {
       isDragging = false;
       document.body.classList.remove('panning');
+    }
+  });
+
+  let isDraggingRef = false;
+  let refDragStartX = 0;
+  let refDragStartY = 0;
+  let refStartX = 0;
+  let refStartY = 0;
+
+  ref.addEventListener('mousedown', function (e) {
+    if (spaceDown || refLocked) return;
+    refSelected = true;
+    ref.classList.add('ref-selected');
+    isDraggingRef = true;
+    refDragStartX = e.clientX;
+    refDragStartY = e.clientY;
+    refStartX = refX;
+    refStartY = refY;
+    e.stopPropagation();
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousedown', function (e) {
+    if (e.target !== ref) {
+      deselectReference();
+    }
+  });
+
+  document.addEventListener('mousemove', function (e) {
+    if (isDraggingRef) {
+      refX = refStartX + (e.clientX - refDragStartX) / scale;
+      refY = refStartY + (e.clientY - refDragStartY) / scale;
+      applyReferenceTransform();
+    }
+  });
+
+  document.addEventListener('mouseup', function () {
+    if (isDraggingRef) {
+      isDraggingRef = false;
+      post({ type: 'referenceMoved', x: refX, y: refY });
+    }
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.code === 'Escape' && refSelected) {
+      deselectReference();
+      return;
+    }
+    if (!refSelected || refLocked) return;
+
+    const step = e.shiftKey ? 10 : 1;
+    let handled = true;
+    if (e.code === 'ArrowLeft') refX -= step;
+    else if (e.code === 'ArrowRight') refX += step;
+    else if (e.code === 'ArrowUp') refY -= step;
+    else if (e.code === 'ArrowDown') refY += step;
+    else handled = false;
+
+    if (handled) {
+      e.preventDefault();
+      applyReferenceTransform();
+      post({ type: 'referenceMoved', x: refX, y: refY });
     }
   });
 

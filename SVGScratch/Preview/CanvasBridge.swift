@@ -7,6 +7,7 @@ enum CanvasEvent {
     case rendered(width: Double, height: Double)
     case error(String)
     case zoomChanged(percent: Int)
+    case referenceMoved(x: Double, y: Double)
 }
 
 enum CanvasBackground: Equatable {
@@ -50,6 +51,32 @@ final class CanvasBridge: NSObject, WKScriptMessageHandler {
         webView?.evaluateJavaScript("window.setZoomPercent(\(percent));")
     }
 
+    func setReference(_ reference: ReferenceImage?, dataURI: String?) {
+        guard let webView else { return }
+        guard let reference, let dataURI else {
+            webView.evaluateJavaScript("window.setReference(null);")
+            return
+        }
+
+        let config: [String: Any] = [
+            "dataURI": dataURI,
+            "opacity": reference.opacity,
+            "x": reference.offsetX,
+            "y": reference.offsetY,
+            "scale": reference.scale,
+            "rotation": reference.rotation,
+            "visible": reference.isVisible,
+            "onTop": reference.isOnTop,
+            "locked": reference.isLocked,
+            "imageWidth": reference.pixelWidth,
+            "imageHeight": reference.pixelHeight,
+        ]
+        guard let data = try? JSONSerialization.data(withJSONObject: config), let json = String(data: data, encoding: .utf8) else {
+            return
+        }
+        webView.evaluateJavaScript("window.setReference(\(json));")
+    }
+
     func setBackground(_ background: CanvasBackground) {
         let mode: String
         switch background {
@@ -73,6 +100,10 @@ final class CanvasBridge: NSObject, WKScriptMessageHandler {
             events.send(.error(body["message"] as? String ?? "Unknown render error"))
         case "zoomChanged":
             events.send(.zoomChanged(percent: body["percent"] as? Int ?? 100))
+        case "referenceMoved":
+            let x = body["x"] as? Double ?? 0
+            let y = body["y"] as? Double ?? 0
+            events.send(.referenceMoved(x: x, y: y))
         default:
             break
         }
