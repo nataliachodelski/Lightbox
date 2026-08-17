@@ -4,6 +4,8 @@ import Foundation
 final class PreviewController: ObservableObject {
     @Published var errorMessage: String?
     @Published var scriptWarning: String?
+    @Published var zoomPercent: Int = 100
+    @Published var background: CanvasBackground = .checkerboard
 
     let bridge = CanvasBridge()
 
@@ -30,15 +32,43 @@ final class PreviewController: ObservableObject {
         textSubject.send(text)
     }
 
+    func zoomIn() {
+        bridge.zoomIn()
+    }
+
+    func zoomOut() {
+        bridge.zoomOut()
+    }
+
+    func zoomActualSize() {
+        bridge.zoomActualSize()
+    }
+
+    func zoomToFit() {
+        bridge.zoomToFit()
+    }
+
+    func setZoom(percent: Int) {
+        bridge.setZoomPercent(percent)
+    }
+
+    func setBackground(_ newBackground: CanvasBackground) {
+        background = newBackground
+        bridge.setBackground(newBackground)
+    }
+
     private func handle(_ event: CanvasEvent) {
         switch event {
         case .ready:
             isReady = true
+            bridge.setBackground(background)
             render(latestText)
         case .rendered:
             errorMessage = nil
         case .error(let message):
             errorMessage = message
+        case .zoomChanged(let percent):
+            zoomPercent = percent
         }
     }
 

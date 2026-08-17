@@ -9,6 +9,24 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
+    background: #dcdcdc;
+  }
+
+  #stage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: 0 0;
+  }
+
+  #artboard {
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+  }
+
+  #artboard.bg-checkerboard {
     background-color: #ffffff;
     background-image:
       linear-gradient(45deg, #cccccc 25%, transparent 25%),
@@ -19,13 +37,12 @@
     background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
   }
 
-  #stage {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transform-origin: 0 0;
+  #artboard.bg-white {
+    background: #ffffff;
+  }
+
+  #artboard.bg-black {
+    background: #000000;
   }
 
   #ref {
@@ -40,21 +57,20 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
-  #host svg {
-    max-width: 100%;
-    max-height: 100%;
+  .panning {
+    cursor: grabbing !important;
+  }
+
+  .pan-ready {
+    cursor: grab;
   }
 </style>
 </head>
 <body>
   <div id="stage">
+    <div id="artboard" class="bg-checkerboard"></div>
     <img id="ref">
     <div id="host"></div>
   </div>
