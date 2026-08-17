@@ -1,0 +1,82 @@
+name: SVGScratch
+options:
+  bundleIdPrefix: com.stephenbritton
+  deploymentTarget:
+    macOS: "14.0"
+
+targets:
+  SVGScratch:
+    type: application
+    platform: macOS
+    sources:
+      - path: SVGScratch
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.stephenbritton.SVGScratch
+        PRODUCT_NAME: SVGScratch
+        MARKETING_VERSION: "0.1"
+        CURRENT_PROJECT_VERSION: "1"
+        CODE_SIGN_ENTITLEMENTS: SVGScratch/SVGScratch.entitlements
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_NSHumanReadableCopyright: ""
+        INFOPLIST_KEY_NSPrincipalClass: NSApplication
+        INFOPLIST_KEY_NSMainStoryboardFile: ""
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ENABLE_HARDENED_RUNTIME: YES
+        SWIFT_VERSION: "5.0"
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+      configs:
+        Debug:
+          CODE_SIGN_STYLE: Automatic
+        Release:
+          CODE_SIGN_STYLE: Automatic
+    info:
+      path: Generated-Info.plist
+      properties:
+        CFBundleDocumentTypes:
+          - CFBundleTypeName: Scalable Vector Graphics
+            CFBundleTypeRole: Editor
+            LSHandlerRank: Owner
+            LSItemContentTypes:
+              - public.svg-image
+            NSDocumentClass: ""
+        UTImportedTypeDeclarations:
+          - UTTypeIdentifier: public.svg-image
+            UTTypeConformsTo:
+              - public.xml
+              - public.image
+            UTTypeDescription: Scalable Vector Graphics
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - svg
+              public.mime-type: image/svg+xml
+        LSApplicationCategoryType: public.app-category.developer-tools
+
+  SVGScratchTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: SVGScratchTests
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.stephenbritton.SVGScratchTests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: "5.0"
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+    dependencies:
+      - target: SVGScratch
+
+schemes:
+  SVGScratch:
+    build:
+      targets:
+        SVGScratch: all
+        SVGScratchTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - SVGScratchTests
+    archive:
+      config: Release

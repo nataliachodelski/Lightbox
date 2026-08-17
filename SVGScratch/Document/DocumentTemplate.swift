@@ -1,0 +1,9 @@
+import Foundation
+
+enum DocumentTemplate {
+    static let defaultContent = """
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="80" fill="#4A90D9" />
+    </svg>
+    """
+}
