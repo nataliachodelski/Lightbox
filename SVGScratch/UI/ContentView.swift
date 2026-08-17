@@ -6,8 +6,7 @@ struct ContentView: View {
 
     var body: some View {
         HSplitView {
-            TextEditor(text: $document.text)
-                .font(.system(.body, design: .monospaced))
+            CodeEditor(text: $document.text)
                 .frame(minWidth: 300)
                 .onChange(of: document.text) { _, newValue in
                     previewController.textDidChange(newValue)
