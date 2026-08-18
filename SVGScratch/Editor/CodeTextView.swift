@@ -1,6 +1,15 @@
 import AppKit
 
 final class CodeTextView: NSTextView {
+    private lazy var completionPopup: CompletionPopup = {
+        let popup = CompletionPopup()
+        popup.onAccept = { [weak self] word in self?.acceptCompletion(word) }
+        return popup
+    }()
+
+    private var currentCompletionContext: SVGCompletionContext = .none
+    private var currentReplacementRange = NSRange(location: 0, length: 0)
+
     override convenience init(frame frameRect: NSRect) {
         let textContainer = NSTextContainer(containerSize: NSSize(width: frameRect.width, height: .greatestFiniteMagnitude))
         let layoutManager = NSLayoutManager()
@@ -39,7 +48,98 @@ final class CodeTextView: NSTextView {
         allowsUndo = true
     }
 
+    // MARK: - Completion
+
+    override func didChangeText() {
+        super.didChangeText()
+        updateCompletionState()
+    }
+
+    private func updateCompletionState() {
+        let nsString = self.string as NSString
+        let query = SVGCompletionAnalyzer.analyze(text: nsString, cursorLocation: selectedRange().location)
+        currentCompletionContext = query.context
+        currentReplacementRange = query.replacementRange
+
+        let candidates = SVGCompletionProvider.candidates(for: query)
+        guard query.context != .none, !candidates.isEmpty, let window else {
+            completionPopup.hide()
+            return
+        }
+
+        if completionPopup.isVisible {
+            completionPopup.updateItems(candidates)
+        } else if let screenPoint = screenPointBelowCaret() {
+            completionPopup.show(items: candidates, at: screenPoint, parent: window)
+        }
+    }
+
+    private func screenPointBelowCaret() -> NSPoint? {
+        guard let window, let layoutManager else { return nil }
+        let glyphIndex = layoutManager.glyphIndexForCharacter(at: selectedRange().location)
+        let lineRect = layoutManager.lineFragmentRect(forGlyphAt: glyphIndex, effectiveRange: nil)
+        let glyphLocation = layoutManager.location(forGlyphAt: glyphIndex)
+        let insets = textContainerInset
+        let pointInView = NSPoint(x: glyphLocation.x + insets.width, y: lineRect.maxY + insets.height)
+        let pointInWindow = convert(pointInView, to: nil)
+        return window.convertPoint(toScreen: pointInWindow)
+    }
+
+    private func acceptCompletion(_ word: String) {
+        let range = currentReplacementRange
+        if case .attributeName = currentCompletionContext {
+            let insertion = "\(word)=\"\""
+            insertText(insertion, replacementRange: range)
+            let caretLocation = range.location + (insertion as NSString).length - 1
+            setSelectedRange(NSRange(location: caretLocation, length: 0))
+        } else {
+            insertText(word, replacementRange: range)
+        }
+        completionPopup.hide()
+    }
+
+    override func moveUp(_ sender: Any?) {
+        if completionPopup.isVisible {
+            completionPopup.moveSelection(by: -1)
+            return
+        }
+        super.moveUp(sender)
+    }
+
+    override func moveDown(_ sender: Any?) {
+        if completionPopup.isVisible {
+            completionPopup.moveSelection(by: 1)
+            return
+        }
+        super.moveDown(sender)
+    }
+
+    override func cancelOperation(_ sender: Any?) {
+        if completionPopup.isVisible {
+            completionPopup.hide()
+            return
+        }
+        super.cancelOperation(sender)
+    }
+
+    override func mouseDown(with event: NSEvent) {
+        completionPopup.hide()
+        super.mouseDown(with: event)
+    }
+
+    override func resignFirstResponder() -> Bool {
+        completionPopup.hide()
+        return super.resignFirstResponder()
+    }
+
+    // MARK: - Editing
+
     override func insertTab(_ sender: Any?) {
+        if completionPopup.isVisible, let selected = completionPopup.selectedItem {
+            acceptCompletion(selected)
+            return
+        }
+
         let range = selectedRange()
         let selectedText = (string as NSString).substring(with: range)
         if selectedText.contains("\n") {
@@ -54,6 +154,8 @@ final class CodeTextView: NSTextView {
     }
 
     override func insertNewline(_ sender: Any?) {
+        completionPopup.hide()
+
         let nsString = string as NSString
         let lineRange = nsString.lineRange(for: NSRange(location: selectedRange().location, length: 0))
         let currentLine = nsString.substring(with: lineRange)

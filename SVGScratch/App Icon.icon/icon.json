@@ -1,0 +1,104 @@
+{
+  "fill" : {
+    "automatic-gradient" : "srgb:0.93333,0.94510,0.96863,1.00000"
+  },
+  "groups" : [
+    {
+      "blur-material" : 0.25,
+      "layers" : [
+        {
+          "image-name" : "Icon 2.svg",
+          "name" : "Icon 2"
+        }
+      ],
+      "lighting" : "individual",
+      "position" : {
+        "scale" : 2.25,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      },
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "specular" : true,
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.6
+      }
+    },
+    {
+      "blur-material" : 0.25,
+      "layers" : [
+        {
+          "image-name" : "Icon 3.svg",
+          "name" : "Icon 3"
+        }
+      ],
+      "position" : {
+        "scale" : 2.25,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      },
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.6
+      }
+    },
+    {
+      "blur-material" : 0.25,
+      "layers" : [
+        {
+          "image-name" : "Icon 4.svg",
+          "name" : "Icon 4"
+        }
+      ],
+      "position" : {
+        "scale" : 2.25,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      },
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.6
+      }
+    },
+    {
+      "layers" : [
+        {
+          "hidden" : true,
+          "image-name" : "Icon.svg",
+          "name" : "Icon"
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

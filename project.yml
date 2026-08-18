@@ -10,6 +10,10 @@ targets:
     platform: macOS
     sources:
       - path: SVGScratch
+        excludes:
+          - "App Icon.icon/**"
+      - path: SVGScratch/App Icon.icon
+        type: folder
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.stephenbritton.SVGScratch
@@ -21,7 +25,8 @@ targets:
         INFOPLIST_KEY_NSHumanReadableCopyright: ""
         INFOPLIST_KEY_NSPrincipalClass: NSApplication
         INFOPLIST_KEY_NSMainStoryboardFile: ""
-        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_APPICON_NAME: "App Icon"
+        ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: YES
         ENABLE_HARDENED_RUNTIME: YES
         SWIFT_VERSION: "5.0"
         MACOSX_DEPLOYMENT_TARGET: "14.0"
