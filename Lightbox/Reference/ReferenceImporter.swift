@@ -95,7 +95,7 @@ enum ReferenceImporter {
 
     private static func referenceImagesDirectory() throws -> URL {
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-        let directory = appSupport.appendingPathComponent("SVGScratch/ReferenceImages", isDirectory: true)
+        let directory = appSupport.appendingPathComponent("Lightbox/ReferenceImages", isDirectory: true)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         return directory
     }

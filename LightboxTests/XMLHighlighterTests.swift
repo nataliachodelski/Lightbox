@@ -1,6 +1,6 @@
 import XCTest
 import AppKit
-@testable import SVGScratch
+@testable import Lightbox
 
 final class XMLHighlighterTests: XCTestCase {
     private func highlight(_ source: String) -> NSTextStorage {

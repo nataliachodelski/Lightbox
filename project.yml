@@ -1,26 +1,26 @@
-name: SVGScratch
+name: Lightbox
 options:
   bundleIdPrefix: com.stephenbritton
   deploymentTarget:
     macOS: "14.0"
 
 targets:
-  SVGScratch:
+  Lightbox:
     type: application
     platform: macOS
     sources:
-      - path: SVGScratch
+      - path: Lightbox
         excludes:
           - "App Icon.icon/**"
-      - path: SVGScratch/App Icon.icon
+      - path: Lightbox/App Icon.icon
         type: folder
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.stephenbritton.SVGScratch
-        PRODUCT_NAME: SVGScratch
+        PRODUCT_BUNDLE_IDENTIFIER: com.stephenbritton.Lightbox
+        PRODUCT_NAME: Lightbox
         MARKETING_VERSION: "0.1"
         CURRENT_PROJECT_VERSION: "1"
-        CODE_SIGN_ENTITLEMENTS: SVGScratch/SVGScratch.entitlements
+        CODE_SIGN_ENTITLEMENTS: Lightbox/Lightbox.entitlements
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_NSHumanReadableCopyright: ""
         INFOPLIST_KEY_NSPrincipalClass: NSApplication
@@ -57,31 +57,31 @@ targets:
               public.mime-type: image/svg+xml
         LSApplicationCategoryType: public.app-category.developer-tools
 
-  SVGScratchTests:
+  LightboxTests:
     type: bundle.unit-test
     platform: macOS
     sources:
-      - path: SVGScratchTests
+      - path: LightboxTests
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.stephenbritton.SVGScratchTests
+        PRODUCT_BUNDLE_IDENTIFIER: com.stephenbritton.LightboxTests
         GENERATE_INFOPLIST_FILE: YES
         SWIFT_VERSION: "5.0"
         MACOSX_DEPLOYMENT_TARGET: "14.0"
     dependencies:
-      - target: SVGScratch
+      - target: Lightbox
 
 schemes:
-  SVGScratch:
+  Lightbox:
     build:
       targets:
-        SVGScratch: all
-        SVGScratchTests: [test]
+        Lightbox: all
+        LightboxTests: [test]
     run:
       config: Debug
     test:
       config: Debug
       targets:
-        - SVGScratchTests
+        - LightboxTests
     archive:
       config: Release

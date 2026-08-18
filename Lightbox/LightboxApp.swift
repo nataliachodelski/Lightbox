@@ -3,7 +3,7 @@ import AppKit
 import UniformTypeIdentifiers
 
 @main
-struct SVGScratchApp: App {
+struct LightboxApp: App {
     var body: some Scene {
         DocumentGroup(newDocument: SVGDocument()) { file in
             ContentView(document: file.$document, fileURL: file.fileURL)

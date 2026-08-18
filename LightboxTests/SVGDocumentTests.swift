@@ -1,5 +1,5 @@
 import XCTest
-@testable import SVGScratch
+@testable import Lightbox
 
 final class SVGDocumentTests: XCTestCase {
     func testDefaultContentIsNonEmpty() {

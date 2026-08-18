@@ -13,7 +13,7 @@ final class ReferenceStore {
 
     private init() {
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-        let directory = appSupport.appendingPathComponent("SVGScratch", isDirectory: true)
+        let directory = appSupport.appendingPathComponent("Lightbox", isDirectory: true)
         try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         fileURL = directory.appendingPathComponent("references.json")
         load()

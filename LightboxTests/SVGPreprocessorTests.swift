@@ -1,5 +1,5 @@
 import XCTest
-@testable import SVGScratch
+@testable import Lightbox
 
 final class SVGPreprocessorTests: XCTestCase {
     func testEmptyDocumentProducesNoError() throws {

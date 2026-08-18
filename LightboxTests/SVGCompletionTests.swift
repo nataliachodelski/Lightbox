@@ -1,5 +1,5 @@
 import XCTest
-@testable import SVGScratch
+@testable import Lightbox
 
 final class SVGCompletionTests: XCTestCase {
     private func query(_ text: String) -> SVGCompletionQuery {

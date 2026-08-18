@@ -1,5 +1,5 @@
 #!/bin/sh
-# Regenerates SVGScratch.xcodeproj from project.yml.
+# Regenerates Lightbox.xcodeproj from project.yml.
 #
 # Always use this instead of a bare `xcodegen generate`: XcodeGen doesn't yet know
 # about Apple's Icon Composer ".icon" format (introduced in Xcode 16.2 / macOS 26)
@@ -13,6 +13,6 @@ cd "$(dirname "$0")"
 
 xcodegen generate
 
-sed -i '' '/App Icon\.icon/{s/lastKnownFileType = folder;/lastKnownFileType = folder.iconcomposer.icon;/;}' SVGScratch.xcodeproj/project.pbxproj
+sed -i '' '/App Icon\.icon/{s/lastKnownFileType = folder;/lastKnownFileType = folder.iconcomposer.icon;/;}' Lightbox.xcodeproj/project.pbxproj
 
 echo "Patched App Icon.icon file type in project.pbxproj"
