@@ -4,6 +4,8 @@ A native macOS app for hand-writing SVG. It has a live preview and lets you over
 
 Lightbox is basically a code editor with syntax highlighting on one side and a WebKit preview on the other, which updates as you type. You can also drop in a reference image (above or below the canvas) and trace over it.
 
+<img width="1012" height="564" alt="Screenshot 2026-09-02 at 19 57 43" src="https://github.com/user-attachments/assets/fcd8ecf8-bdd8-4294-9f82-6e2d13b14c58" />
+
 ## Features
 
 - **Live SVG preview**: the canvas redraws shortly after you stop typing, so you catch mistakes right away.
