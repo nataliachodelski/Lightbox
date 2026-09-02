@@ -23,3 +23,6 @@ Generated-Info.plist
 
 # macOS
 .DS_Store
+
+# Release artifacts
+dist/
