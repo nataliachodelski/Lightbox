@@ -15,7 +15,7 @@ Lightbox is basically a code editor with syntax highlighting on one side and a W
 
 ## Installing
 
-Grab `Lightbox-<version>-macOS.zip` from the [Releases page](https://github.com/StephentheGD/SVGScratch/releases), unzip it, and drag `Lightbox.app` into `/Applications`.
+Grab `Lightbox-<version>-macOS.zip` from the [Releases page](https://github.com/StephentheGD/Lightbox/releases), unzip it, and drag `Lightbox.app` into `/Applications`.
 
 The app is signed ad-hoc, not notarized, so macOS will block it the first time you try to open it. You'll get a message saying it "cannot be opened because Apple cannot check it for malicious software." To get past that:
 
