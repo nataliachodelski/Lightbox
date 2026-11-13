@@ -11,21 +11,21 @@ struct CodeEditor: NSViewRepresentable {
     func makeNSView(context: Context) -> NSScrollView {
         let scrollView = NSScrollView()
         scrollView.hasVerticalScroller = true
-        scrollView.hasHorizontalScroller = true
+        scrollView.hasHorizontalScroller = false // No longer needed when wrapping
         scrollView.autohidesScrollers = true
         scrollView.hasVerticalRuler = true
         scrollView.rulersVisible = true
-
+    
         let textView = CodeTextView(frame: .zero)
         textView.minSize = NSSize(width: 0, height: 0)
         textView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
         textView.isVerticallyResizable = true
-        textView.isHorizontallyResizable = true
+        textView.isHorizontallyResizable = false // Lock width to the scroll view
         textView.autoresizingMask = [.width]
-
+    
         if let textContainer = textView.textContainer {
-            textContainer.widthTracksTextView = false
-            textContainer.containerSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+            textContainer.widthTracksTextView = true // Wrap text at the view's width
+            textContainer.containerSize = NSSize(width: 0, height: CGFloat.greatestFiniteMagnitude)
         }
 
         textView.delegate = context.coordinator
